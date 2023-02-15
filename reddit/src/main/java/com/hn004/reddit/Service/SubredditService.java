@@ -3,13 +3,22 @@ package com.hn004.reddit.Service;
 import java.util.List;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.hn004.reddit.Entity.Subreddit;
+import com.hn004.reddit.Entity.Subreddit.SubredditBuilder;
 import com.hn004.reddit.Repository.SubredditRepo;
+import com.hn004.reddit.Security.JwtAuthenticationFilter;
+import com.hn004.reddit.Service.CustomException.StringRedditException;
 import com.hn004.reddit.dto.SubredditDto;
+import com.hn004.reddit.dto.SubredditDto.SubredditDtoBuilder;
+import com.hn004.reddit.mapper.SubredditMapper;
+import com.hn004.reddit.mapper.SubredditMapperImpl;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
 
@@ -19,41 +28,41 @@ import static java.util.stream.Collectors.toList;
 public class SubredditService {
 	
 	private final SubredditRepo subredditRepo;
-	int postCount=0;
+	
+	SubredditMapper subredditMapper;
+	
+	
+	static Integer postCount=0;
 	@Transactional
 	public SubredditDto save(SubredditDto subredditDto) {
-		Subreddit subreddit=subredditRepo.save(mapSubredditDto(subredditDto));
+		Subreddit subreddit=subredditRepo.save(subredditMapper.mapDtoToSubreddit(subredditDto));
 //		subredditRepo.save(subreddit);
 		subredditDto.setId(subreddit.getId());
 		
-		subredditDto.setNumberofPosts(postCount);
+		subredditDto.setNumberofPosts(postCount++);
 		return subredditDto;
 	}
 
-	private Subreddit mapSubredditDto(SubredditDto subredditDto) {
-		postCount++;
-		return Subreddit.builder().name(subredditDto.getName()).description(subredditDto.getDescription())
-		.build();
-	}
+
 
 	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public List<SubredditDto> getAll() {
 		
 		return subredditRepo.findAll().stream()
-				.map(this::mapToDto)
+				.map(subredditMapper::mapSubredditToDto)
 				.collect
 				(toList());
 	}
+
+
+
+	public SubredditDto getSubreddit(Long id) {
+		Subreddit subreddit=subredditRepo.findById(id)
+				.orElseThrow(() -> new StringRedditException("no subreddit found"));
+		
+		return subredditMapper.mapSubredditToDto(subreddit);
+	}
 	
-	 private SubredditDto mapToDto(Subreddit subreddit) {
-	        return SubredditDto.builder().name(subreddit.getName())
-	                .description(subreddit.getDescription())
-	                .build();
-	    }
-//	
-//	private Subreddit mapToDto(SubredditDto subredditDto) {
-//		return Subreddit.builder().name(subredditDto.getSubredditName())
-//				.description(subredditDto.getDescription()).build();
-//	}
+
 
 }
