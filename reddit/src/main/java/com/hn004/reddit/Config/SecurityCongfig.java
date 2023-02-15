@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.hn004.reddit.Security.JwtAuthenticationFilter;
+import com.hn004.reddit.mapper.SubredditMapper;
+import com.hn004.reddit.mapper.SubredditMapperImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -67,5 +69,9 @@ public class SecurityCongfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter();
     }
 	
+	@Bean
+	SubredditMapperImpl subredditMapper() {
+		return new SubredditMapperImpl();
+	}
 
 }
