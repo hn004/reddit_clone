@@ -28,7 +28,7 @@ public class Subreddit {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotBlank(message = "name is required")
-	private String name;
+	private String subredditName;
 	@NotBlank(message = "description is required")
 	private String description;
 	@OneToMany(fetch = FetchType.LAZY)
