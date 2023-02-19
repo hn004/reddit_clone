@@ -7,11 +7,12 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,10 @@ import com.hn004.reddit.dto.AuthenticationResponse;
 import com.hn004.reddit.dto.LoginRequest;
 import com.hn004.reddit.dto.RegisterRequest;
 
+import io.jsonwebtoken.Jwts;
+
+
+//import org.springframework.security.oauth2.jwt.Jwt;
 @Service
 @Transactional
 public class AuthService {
@@ -47,6 +52,8 @@ public class AuthService {
 	
 	@Autowired
 	private JwtProvider jwtProvider;
+	
+	
 	
 	@Transactional
 	public void signup(RegisterRequest registerRequest) {
@@ -98,5 +105,15 @@ public class AuthService {
 		String token=jwtProvider.generateToken(authenticate);
 		return new AuthenticationResponse(token,loginRequest.getUsername());
 	}
+	
+	  @org.springframework.transaction.annotation.Transactional(readOnly = true)
+	    public User getCurrentUser() {
+	        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+	                getContext().getAuthentication().getPrincipal();
+	        return userRepo.findByUsername(principal.getUsername())
+	                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
+	    }
+	
+	
 
 }
