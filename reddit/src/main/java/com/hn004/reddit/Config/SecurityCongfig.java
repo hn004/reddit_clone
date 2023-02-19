@@ -16,8 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.hn004.reddit.Security.JwtAuthenticationFilter;
+import com.hn004.reddit.mapper.PostMapper;
+//import com.hn004.reddit.mapper.PostMapperImpl;
 import com.hn004.reddit.mapper.SubredditMapper;
-import com.hn004.reddit.mapper.SubredditMapperImpl;
+//import com.hn004.reddit.mapper.SubredditMapperImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,9 @@ import lombok.RequiredArgsConstructor;
 public class SecurityCongfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	private final UserDetailsService userDetailsService;
+	private  UserDetailsService userDetailsService;
+	
+//	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Override
 	public void configure(HttpSecurity httpSecurity) throws Exception{
@@ -40,6 +44,10 @@ public class SecurityCongfig extends WebSecurityConfigurerAdapter {
 		.permitAll()
 		.antMatchers(HttpMethod.GET,"/api/subreddit")
 		.permitAll()
+		.antMatchers(HttpMethod.GET, "/api/posts/")
+        .permitAll()
+        .antMatchers(HttpMethod.GET, "/api/posts/**")
+        .permitAll()
 		.anyRequest()
 		.authenticated();
 		
@@ -65,13 +73,20 @@ public class SecurityCongfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+	public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
 	
-	@Bean
-	SubredditMapperImpl subredditMapper() {
-		return new SubredditMapperImpl();
-	}
+//	@Bean
+//	SubredditMapperImpl subredditMapper() {
+//		return new SubredditMapperImpl();
+//	}
+//	
+//	@Bean
+//	PostMapperImpl postMapper() {
+//		return new PostMapperImpl();
+//	}
+//	
+
 
 }
