@@ -1,0 +1,95 @@
+@Override
+	public Post map(PostRequest postRequest, Subreddit subreddit, User user) {
+		Post post=new Post();
+//		postRequest.getSubredditName();
+		post.setPostName(postRequest.getPostName());
+		post.setUrl(postRequest.getUrl());
+		post.setDescription(postRequest.getDescription());
+		subreddit.setCreateDate(java.time.Instant.now());
+		subreddit.setSubredditName(postRequest.getSubredditName());
+		subreddit.getId();
+		post.setSubreddit(subreddit);
+		user.getUsername();
+		post.setUser(user);
+		return post;
+	}
+
+	@Override
+	public PostResponse mapToDto(Post post) {
+		if(post==null) {
+			return null;
+		}
+		PostResponse postResponse=new PostResponse();
+		postResponse.setId(post.getPostId());
+		postResponse.setUserName(postUserUsername(post));
+		postResponse.setPostName(post.getPostName());
+		postResponse.setUrl(post.getUrl());
+		postResponse.setDescription(post.getDescription());
+		return postResponse;
+	}
+
+	private String postUserUsername(Post post) {
+		if(post==null) {
+			return null;
+		}
+		User user=new User();
+		return user.getUsername();
+//		post.se
+		
+//		return null;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//subredditmapper
+
+
+
+@Override
+	@Bean
+	public SubredditDto mapSubredditToDto(Subreddit subreddit) {
+        
+		if(subreddit==null) {
+			return null;
+		}
+		SubredditDtoBuilder subredditDto=SubredditDto.builder();
+		subredditDto.id(subreddit.getId());
+		subredditDto.subredditName(subreddit.getSubredditName());
+		subredditDto.description(subreddit.getDescription());
+		subredditDto.numberofPosts(mapPosts(subreddit.getPosts()));
+		return subredditDto.build();
+	}
+
+	@Override
+	@Bean
+	public Subreddit mapDtoToSubreddit(SubredditDto subredditDto) {
+		if(subredditDto==null) {
+			return null;
+		}
+		SubredditBuilder subreddit=Subreddit.builder();
+		subreddit.id(subredditDto.getId());
+		subreddit.subredditName(subredditDto.getSubredditName());
+		subreddit.description(subredditDto.getDescription());
+		return subreddit.build();
+		
+	}
