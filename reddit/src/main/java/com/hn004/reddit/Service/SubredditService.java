@@ -15,7 +15,7 @@ import com.hn004.reddit.Service.CustomException.StringRedditException;
 import com.hn004.reddit.dto.SubredditDto;
 import com.hn004.reddit.dto.SubredditDto.SubredditDtoBuilder;
 import com.hn004.reddit.mapper.SubredditMapper;
-import com.hn004.reddit.mapper.SubredditMapperImpl;
+//import com.hn004.reddit.mapper.SubredditMapperImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
